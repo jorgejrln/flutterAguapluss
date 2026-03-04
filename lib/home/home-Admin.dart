@@ -52,7 +52,7 @@ class _InicioState extends State<Inicio> {
                       child: TurnoCard
                       (id: ultimoTurno!.id, idTrabajador: ultimoTurno!.idTrabajador, 
                       nombre: ultimoTurno!.nombreTrabajador ?? 'Nombre no disponible', fecha: ultimoTurno!.fecha, total: ultimoTurno!.total,
-                       fondo: ultimoTurno!.fondo, corte: ultimoTurno!.corte, fotoUrl: ''),
+                       fondo: ultimoTurno!.fondo, corte: ultimoTurno!.corte, fotoUrl: 'https://picsum.photos/200' ),
                         
                     ),
                   ],

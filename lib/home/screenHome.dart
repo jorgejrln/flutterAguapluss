@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:proyecto_aguapluss/home/home.dart';
+import 'package:proyecto_aguapluss/home/home-Admin.dart';
 import 'package:proyecto_aguapluss/home/login.dart';
 import 'package:proyecto_aguapluss/home/screemEquivalencia.dart';
 import 'package:proyecto_aguapluss/home/cargadores.dart';
