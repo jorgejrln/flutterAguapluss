@@ -18,27 +18,33 @@ class TurnoCard extends StatelessWidget {
     required this.total,
     required this.fondo,
     required this.corte,
-    required this.fotoUrl, required this.idTrabajador,
+    required this.fotoUrl,
+    required this.idTrabajador,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    // 🎨 Color dependiendo del fondo
+    Color fondoColor = fondo >= 0 ? Colors.green : Colors.red;
+
     return Card(
-      elevation: 6,
+      color: Colors.white,
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
       ),
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
 
-            // 📸 Foto del trabajador
+            // 📸 Foto trabajador
             CircleAvatar(
-              radius: 35,
+              radius: 30,
               backgroundImage: NetworkImage(fotoUrl),
-              backgroundColor: Colors.grey[200],
+              backgroundColor: Colors.grey.shade200,
             ),
 
             const SizedBox(width: 16),
@@ -48,29 +54,76 @@ class TurnoCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
+                  // Nombre
                   Text(
                     nombre,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 17,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+
                   const SizedBox(height: 6),
-                  Text("Fecha: $fecha"),
-                  Text("Fondo: \$${fondo.toStringAsFixed(2)}"),
-                  Text("Corte: \$${corte.toStringAsFixed(2)}"),
+
+                  Text(
+                    "Fecha: $fecha",
+                    style: TextStyle(
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  Row(
+                    children: [
+                      Text(
+                        "Fondo: ",
+                        style: TextStyle(color: Colors.grey.shade700),
+                      ),
+                      Text(
+                        "\$${fondo.toDouble().toStringAsFixed(2)}",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: fondoColor,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Text(
+                    "Corte: \$${corte.toDouble().toStringAsFixed(2)}",
+                    style: TextStyle(
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
                 ],
               ),
             ),
 
-            // 💰 Total grande
-            Text(
-              "\$${total.toStringAsFixed(2)}",
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
+            // 💰 Total
+            Column(
+              children: [
+
+                const Text(
+                  "TOTAL",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  "\$${total.toDouble().toStringAsFixed(2)}",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: fondoColor,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

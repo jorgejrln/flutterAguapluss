@@ -3,64 +3,91 @@ import 'package:proyecto_aguapluss/recursos/colores.dart';
 
 class Dinero extends StatelessWidget {
   final int cantidad;
-  final String? fotoUrl;
   final VoidCallback? onTap;
 
   const Dinero({
     super.key,
     required this.cantidad,
-    this.fotoUrl,
-    this.onTap, 
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      elevation: 6,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(18),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(18),
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+
+          // 📌 RESPONSIVO
+          width: screenWidth < 600 ? double.infinity : 300,
+
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            color: const Color.fromARGB(255, 255, 255, 255),
+          ),
+
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
-
-              
-
             children: [
-                Text('CAPITAL',
-                  style: const TextStyle(
-                  color:Colores.secondary,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,)
+
+              // ICONO
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colores.secondary.withOpacity(0.15),
+                  shape: BoxShape.circle,
                 ),
-              SizedBox(height: 10,),
-              CircleAvatar(
-                radius: 40,
-                backgroundImage:
-                    fotoUrl != null ? NetworkImage(fotoUrl!) : null,
-                child: fotoUrl == null
-                    ? const Icon(
-                        Icons.monetization_on_rounded,
-                        size: 50,
-                      )
-                    : null,
+                child: const Icon(
+                  Icons.attach_money_rounded,
+                  size: 35,
+                  color: Colores.secondary,
+                ),
               ),
-              const SizedBox(height: 20),
+
+              const SizedBox(height: 15),
+
+              // TITULO
+              const Text(
+                "CAPITAL ACTUAL",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
+                  letterSpacing: 1.2,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // DINERO
               Text(
-                '\$ ${cantidad.toStringAsFixed(2)}',
+                "\$ ${cantidad.toString()}",
                 style: const TextStyle(
-                  color:Colores.secondary,
-                  fontSize: 35,
+                  fontSize: 40,
+                  color: Colores.secondary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-               const SizedBox(height: 49),
+
+              const SizedBox(height: 10),
+
+              // SUBTEXTO
+              const Text(
+                "Total del turno",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black45,
+                ),
+              ),
             ],
           ),
         ),

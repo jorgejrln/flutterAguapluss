@@ -34,7 +34,7 @@ class Turno {
 
     factory Turno.fromJson(Map<String, dynamic> json) => Turno(
         id: json["id"],
-        fecha: json['fecha'] != null ? json['fecha'] : '',
+        fecha: json['fecha'] ?? '',
         idTrabajador: json["idTrabajador"],
         lecIn: json["lecIn"],
         lecFin: json["lecFin"],
