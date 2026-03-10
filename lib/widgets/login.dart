@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_aguapluss/Models/UsuariosModel.dart';
 import 'package:proyecto_aguapluss/home/screenHome.dart';
 import 'package:proyecto_aguapluss/recursos/colores.dart';
+import 'package:provider/provider.dart';
+import 'package:proyecto_aguapluss/servicios/UsuariosService.dart';
+import 'package:proyecto_aguapluss/Models/UsuariosModel.dart';
+import 'package:proyecto_aguapluss/providers/UsuariosProvider.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -13,33 +18,24 @@ class _LoginState extends State<Login> {
 
   final TextEditingController _usercontroller = TextEditingController();
   final TextEditingController _passworcontroller = TextEditingController();
+ Future<void> login() async {
+    final usuario = _usercontroller.text.trim();
+    final password = _passworcontroller.text.trim();
 
-  String usuario = 'Admin';
-  String contrasena = 'Admin';
+    if (usuario.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, llena todos los campos')),
+      );
+      return; // No hacemos la petición si faltan campos
+    }}
 
   bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
 
-    void _login1() {
-
-      String input = _passworcontroller.text;
-      String input2 = _usercontroller.text;
-
-      if (input != contrasena || input2 != usuario) {
-        mostrarMensajeFlotante(context, "Usuario o contraseña incorrectos");
-      } 
-      else {
-        Push(context);
-      }
-
-    }
-
     return Scaffold(
-
       appBar: AppBar(
         backgroundColor: Colores.secondary,
         centerTitle: true,
@@ -55,27 +51,19 @@ class _LoginState extends State<Login> {
       backgroundColor: Colores.primary,
 
       body: Center(
-
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-
             ConstrainedBox(
-
               constraints: BoxConstraints(
                 maxWidth: screenWidth < 600 ? 320 : 450, // RESPONSIVE
               ),
 
               child: screenWidth < 600
-
                   // 📱 DISEÑO PARA CELULAR
                   ? Column(
                       children: [
-
-                        const Text(
-                          "Usuario:",
-                          style: TextStyle(fontSize: 20),
-                        ),
+                        const Text("Usuario:", style: TextStyle(fontSize: 20)),
 
                         const SizedBox(height: 10),
 
@@ -126,24 +114,16 @@ class _LoginState extends State<Login> {
                         ),
                       ],
                     )
-
                   // 💻 DISEÑO PARA WEB
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: const [
-                            Text(
-                              "Usuario:",
-                              style: TextStyle(fontSize: 20),
-                            ),
+                            Text("Usuario:", style: TextStyle(fontSize: 20)),
                             SizedBox(height: 45),
-                            Text(
-                              "Contraseña:",
-                              style: TextStyle(fontSize: 20),
-                            ),
+                            Text("Contraseña:", style: TextStyle(fontSize: 20)),
                           ],
                         ),
 
@@ -151,7 +131,6 @@ class _LoginState extends State<Login> {
 
                         Column(
                           children: [
-
                             SizedBox(
                               width: 250,
                               child: TextField(
@@ -216,25 +195,43 @@ class _LoginState extends State<Login> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              onPressed: _login1,
+              onPressed: () async {
+
+                  
+
+                login();
+                final usuarioProvider = context.read<UsuariosProvider>();
+
+                try {
+                  final user = await usuarioProvider.validarLogin(
+                    _usercontroller.text.trim(),
+                    _passworcontroller.text.trim(),
+                  );
+
+                  if (user != null) {
+                print(user);
+                print(user.rol);
+
+                    Navigator.pushReplacementNamed(
+                      context,
+                      user.rol.toLowerCase() == 'admin'
+                          ? '/adminHome'
+                          : '/trabajadorHome',
+                    );
+                  }
+                } catch (e) {
+                  mostrarMensajeFlotante(context, e.toString());
+                }
+              },
               child: const Text('Ingresar'),
             ),
-
           ],
         ),
       ),
     );
   }
 
-  void Push(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const Home()),
-    );
-  }
-
   void mostrarMensajeFlotante(BuildContext context, String mensaje) {
-
     final overlay = Overlay.of(context);
 
     final overlayEntry = OverlayEntry(
@@ -247,13 +244,10 @@ class _LoginState extends State<Login> {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color:  Colores.secondary,
+              color: Colores.secondary,
               borderRadius: BorderRadius.circular(12),
               boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 10,
-                ),
+                BoxShadow(color: Colors.black26, blurRadius: 10),
               ],
             ),
             child: Text(

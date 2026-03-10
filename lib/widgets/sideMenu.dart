@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:proyecto_aguapluss/home/mainHome.dart';
 
-
 class Sidemenu extends StatefulWidget {
   const Sidemenu({super.key});
 
@@ -17,6 +16,7 @@ class _SidemenuState extends State<Sidemenu> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: NavigationDrawer(
+        
         selectedIndex: navDrawerIndex,
         onDestinationSelected: (index) {
           setState(() {
@@ -24,17 +24,13 @@ class _SidemenuState extends State<Sidemenu> {
           });
 
           if (index == 0) {
-            Navigator.pop(context); 
+            Navigator.pop(context);
           } else if (index == 1) {
-           
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const MainApp()),
-              (route) => false, 
-            );
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
           }
         },
         children: const [
+          
           NavigationDrawerDestination(
             icon: Icon(Icons.arrow_back),
             label: Text('Volver'),

@@ -9,9 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.6      # api rest
-  provider: ^6.1.2   # provider
-  fluttertoast: ^8.2.4   # mensaje flotante
+
+  http: ^0.13.6            # API REST
+  provider: ^6.1.2         # manejo de estado
+  fluttertoast: ^8.2.4     # mensajes flotantes
+  syncfusion_flutter_datagrid: ^24.2.9   # tablas avanzadas
 
 dev_dependencies:
   flutter_test:

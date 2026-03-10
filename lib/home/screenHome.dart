@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:proyecto_aguapluss/home/home-Admin.dart';
-import 'package:proyecto_aguapluss/home/login.dart';
+import 'package:proyecto_aguapluss/recursos/tableTurnos.dart';
+import 'package:proyecto_aguapluss/widgets/login.dart';
 import 'package:proyecto_aguapluss/home/screemEquivalencia.dart';
 import 'package:proyecto_aguapluss/home/cargadores.dart';
 import 'package:proyecto_aguapluss/home/screenTrabajadores.dart';
@@ -20,7 +21,7 @@ class _HomeState extends State<Home> {
 
   final List<Widget> _screens = [
     const Inicio(),
-    Equivalencia(),
+    TurnosScreen(),
     Trabajadores(),
     Cargadores(),
   ];
@@ -83,3 +84,4 @@ class _HomeState extends State<Home> {
     );
   }
 }
+

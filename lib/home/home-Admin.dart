@@ -9,6 +9,7 @@ import 'package:proyecto_aguapluss/recursos/cardsDinero.dart';
 import 'package:proyecto_aguapluss/recursos/colores.dart';
 import 'package:proyecto_aguapluss/recursos/cardsTrabajadores.dart';
 import 'package:proyecto_aguapluss/servicios/TurnoServices.dart';
+import 'package:proyecto_aguapluss/widgets/sideMenu.dart';
 
 class Inicio extends StatefulWidget {
   const Inicio({super.key});
@@ -47,6 +48,8 @@ class _InicioState extends State<Inicio> {
     bool esCelular = screenWidth < 700;
 
     return Scaffold(
+      
+      
       backgroundColor: Colores.primary,
       body: Center(
         child: SingleChildScrollView(
@@ -78,7 +81,7 @@ class _InicioState extends State<Inicio> {
                           nombre:
                               ultimoTurno!.nombreTrabajador ??
                               'Nombre no disponible',
-                          fecha: ultimoTurno!.fecha,
+                         fecha: ultimoTurno!.fecha ?? 'Sin fecha',
                           total: ultimoTurno!.total,
                           fondo: ultimoTurno!.fondo,
                           corte: ultimoTurno!.corte,
@@ -103,7 +106,7 @@ class _InicioState extends State<Inicio> {
                               nombre:
                                   ultimoTurno!.nombreTrabajador ??
                                   'Nombre no disponible',
-                              fecha: ultimoTurno!.fecha,
+                              fecha: ultimoTurno!.fecha ?? 'Sin fecha',
                               total: ultimoTurno!.total,
                               fondo: ultimoTurno!.fondo,
                               corte: ultimoTurno!.corte,
@@ -122,7 +125,7 @@ class _InicioState extends State<Inicio> {
                               nombre:
                                   ultimoTurno!.nombreTrabajador ??
                                   'Nombre no disponible',
-                              fecha: ultimoTurno!.fecha,
+                            fecha: ultimoTurno!.fecha ?? 'Sin fecha',
                               total: ultimoTurno!.total,
                               fondo: ultimoTurno!.fondo,
                               corte: ultimoTurno!.corte,
@@ -139,7 +142,7 @@ class _InicioState extends State<Inicio> {
                               nombre:
                                   ultimoTurno!.nombreTrabajador ??
                                   'Nombre no disponible',
-                              fecha: ultimoTurno!.fecha,
+                           fecha: ultimoTurno!.fecha ?? 'Sin fecha',
                               total: ultimoTurno!.total,
                               fondo: ultimoTurno!.fondo,
                               corte: ultimoTurno!.corte,
