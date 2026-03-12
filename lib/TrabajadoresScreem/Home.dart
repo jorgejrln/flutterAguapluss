@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:proyecto_aguapluss/providers/UsuariosProvider.dart';
+
 import 'package:proyecto_aguapluss/recursos/colores.dart';
 import 'package:proyecto_aguapluss/widgets/sideMenu.dart';
 
@@ -10,8 +13,15 @@ class HomeU extends StatefulWidget {
 }
 
 class _HomeUState extends State<HomeU> {
+
+
+
+  
   @override
   Widget build(BuildContext context) {
+
+
+
 
     double width = MediaQuery.of(context).size.width;
     bool esCelular = width < 600;
@@ -42,7 +52,9 @@ class _HomeUState extends State<HomeU> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     botonIniciarTurno(),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 25),
+                    botonTerminarTurno(),
+                    const SizedBox(height: 25),
                     botonVerTurnos(),
                   ],
                 )
@@ -50,7 +62,9 @@ class _HomeUState extends State<HomeU> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     botonIniciarTurno(),
-                    const SizedBox(width: 40),
+                    const SizedBox(width: 30),
+                    botonTerminarTurno(),
+                    const SizedBox(width: 30),
                     botonVerTurnos(),
                   ],
                 ),
@@ -65,35 +79,34 @@ class _HomeUState extends State<HomeU> {
       onPressed: () {
         Navigator.pushNamed(context, "/TurnoScreen");
       },
-      child: Container(
-        width: 260,
-        height: 140,
-        decoration: BoxDecoration(
-          color: Colores.acent,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            )
-          ],
-        ),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.play_circle_fill, size: 45, color: Colors.white),
-            SizedBox(height: 10),
-            Text(
-              "INICIAR TURNO",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            )
-          ],
-        ),
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.zero,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+      ),
+      child: contenedorBoton(
+        icono: Icons.play_circle_fill,
+        texto: "INICIAR TURNO",
+        color: Colores.acent,
+      ),
+    );
+  }
+
+  // BOTON TERMINAR TURNO
+  Widget botonTerminarTurno() {
+    return ElevatedButton(
+      onPressed: () {
+ Navigator.pushNamed(context, "/CerrarTurno");
+},
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.zero,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+      ),
+      child: contenedorBoton(
+        icono: Icons.stop_circle,
+        texto: "TERMINAR TURNO",
+        color: Colores.secondary,
       ),
     );
   }
@@ -104,36 +117,49 @@ class _HomeUState extends State<HomeU> {
       onTap: () {
         print("Ver turnos");
       },
-      child: Container(
-        width: 260,
-        height: 140,
-        decoration: BoxDecoration(
-          color: Colores.secondary,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            )
-          ],
-        ),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.list_alt, size: 45, color: Colors.white),
-            SizedBox(height: 10),
-            Text(
-              "VER TURNOS",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            )
-          ],
-        ),
+      child: contenedorBoton(
+        icono: Icons.list_alt,
+        texto: "VER TURNOS",
+        color: Colores.secondary,
       ),
     );
   }
-}
+
+  // CONTENEDOR GENERAL DE BOTONES
+  Widget contenedorBoton({
+    required IconData icono,
+    required String texto,
+    required Color color,
+  }) {
+    return Container(
+      width: 260,
+      height: 140,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icono, size: 45, color: Colors.white),
+          const SizedBox(height: 10),
+          Text(
+            texto,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+} 

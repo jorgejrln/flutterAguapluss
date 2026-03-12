@@ -1,7 +1,10 @@
 import 'package:http/http.dart' as http;
+import 'package:proyecto_aguapluss/Models/CerrarTurno.dart';
+import 'package:proyecto_aguapluss/Models/CrearTurno.dart';
 import 'dart:convert';
 
 import 'package:proyecto_aguapluss/Models/TurnoModel.dart';
+import 'package:proyecto_aguapluss/TrabajadoresScreem/TurnoScreen.dart';
 
 class Turnoservices {
 Future<List<Turno>> obtenerTurnos() async {
@@ -19,7 +22,7 @@ Future<List<Turno>> obtenerTurnos() async {
   }
 }
 
-  Future<void> agregarTurno(Turno turno) async {
+  Future<void> agregarTurno(CrearTurno turno) async {
     final url = Uri.parse('http://localhost:5041/Turnos');
     final response = await http.post(
       url,
@@ -58,4 +61,39 @@ Future<List<Turno>> obtenerTurnos() async {
       throw Exception('Error ${response.statusCode}');
     }
   }
+
+  Future<void> TerminarTurno(CerrarTurno turno) async {
+
+  final url = Uri.parse('http://localhost:5041/Turnos/CerrarTurno');
+
+  final response = await http.put(
+    url,
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(turno.toJson()),
+  );
+
+  if (response.statusCode != 200 && response.statusCode != 204) {
+    throw Exception('Error al cerrar el turno');
+  }
+
+}
+
+
+Future<List<Turno>> obtenerUltimos3Turnos() async {
+  final url = Uri.parse('http://localhost:5041/Turnos/Ultimos3');
+  final response = await http.get(url);
+
+  print("STATUS: ${response.statusCode}");
+  print("BODY: ${response.body}");
+
+  if (response.statusCode == 200) {
+    final List decoded = jsonDecode(response.body);
+    return decoded.map((e) => Turno.fromJson(e)).toList();
+  } else {
+    throw Exception('Error al obtener turnos');
+  }
+}
+ 
+
+
 }

@@ -10,10 +10,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.13.6            # API REST
-  provider: ^6.1.2         # manejo de estado
-  fluttertoast: ^8.2.4     # mensajes flotantes
-  syncfusion_flutter_datagrid: ^24.2.9   # tablas avanzadas
+  http: ^0.13.6
+  provider: ^6.1.2
+  fluttertoast: ^8.2.4
+  syncfusion_flutter_datagrid: ^24.2.9
+  fl_chart: ^0.68.0
 
 dev_dependencies:
   flutter_test:

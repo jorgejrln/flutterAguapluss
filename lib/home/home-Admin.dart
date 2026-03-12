@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_aguapluss/Models/TurnoModel.dart';
-import 'package:proyecto_aguapluss/Models/TrabajadorModel.dart';
-import 'package:proyecto_aguapluss/home/ScreemGastos.dart';
-import 'package:proyecto_aguapluss/home/screenHome.dart';
-import 'package:proyecto_aguapluss/providers/TurnosProvider.dart';
+import 'package:proyecto_aguapluss/providers/turnos_provider.dart';
 import 'package:proyecto_aguapluss/recursos/cardTurno.dart';
 import 'package:proyecto_aguapluss/recursos/cardsDinero.dart';
 import 'package:proyecto_aguapluss/recursos/colores.dart';
-import 'package:proyecto_aguapluss/recursos/cardsTrabajadores.dart';
-import 'package:proyecto_aguapluss/servicios/TurnoServices.dart';
-import 'package:proyecto_aguapluss/widgets/sideMenu.dart';
 
 class Inicio extends StatefulWidget {
   const Inicio({super.key});
@@ -19,14 +13,14 @@ class Inicio extends StatefulWidget {
 }
 
 class _InicioState extends State<Inicio> {
-  Turno? ultimoTurno;
+  List<Turno> turnos = [];
   bool isLoading = true;
   String? error;
 
   @override
   void initState() {
     super.initState();
-    cargarTurno();
+    cargarTurnos();
   }
 
   @override
@@ -39,18 +33,18 @@ class _InicioState extends State<Inicio> {
       return Scaffold(body: Center(child: Text("Error: $error")));
     }
 
-    if (ultimoTurno == null) {
+    if (turnos.isEmpty) {
       return const Scaffold(body: Center(child: Text("No hay turnos")));
     }
 
-    // 📌 AQUÍ detectamos el tamaño de pantalla
     double screenWidth = MediaQuery.of(context).size.width;
     bool esCelular = screenWidth < 700;
 
+    Turno turnoActual = turnos[0];
+
     return Scaffold(
-      
-      
       backgroundColor: Colores.primary,
+
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -58,108 +52,120 @@ class _InicioState extends State<Inicio> {
 
             child: esCelular
                 ? Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      // 📌 CARD DINERO
                       SizedBox(
                         width: screenWidth * 0.8,
-                        height: 300,
+                        height: 250,
                         child: Dinero(
-                          cantidad: ultimoTurno!.total,
+                          cantidad: turnoActual.total,
                           onTap: () {},
                         ),
                       ),
+                          SizedBox(height: 30),
+                      ...turnos.map((turno) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: TurnoCard(
+                            id: turno.id,
+                            idTrabajador: turno.idTrabajador,
+                            nombre: turno.nombreTrabajador ?? "Sin nombre",
+                            fecha: turno.fecha?.toString() ?? "Sin fecha",
+                            total: turno.total,
+                            fondo: turno.fondo,
+                            corte: turno.corte,
+                            fotoUrl: 'https://picsum.photos/200',
+                          ),
+                        );
+                      }),
 
-                      const SizedBox(height: 30),
-
-                      // 📌 CARD TURNO
+                      /// BOTON
                       SizedBox(
-                        width: screenWidth * 0.9,
-                        child: TurnoCard(
-                          id: ultimoTurno!.id,
-                          idTrabajador: ultimoTurno!.idTrabajador,
-                          nombre:
-                              ultimoTurno!.nombreTrabajador ??
-                              'Nombre no disponible',
-                         fecha: ultimoTurno!.fecha ?? 'Sin fecha',
-                          total: ultimoTurno!.total,
-                          fondo: ultimoTurno!.fondo,
-                          corte: ultimoTurno!.corte,
-                          fotoUrl: 'https://picsum.photos/200',
+                         width: screenWidth * 0.8,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colores.secondary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40,
+                              vertical: 14,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                        
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/historialTurnos");
+                          },
+                          icon: const Icon(Icons.list),
+                          label: const Text("Ver todos los turnos"),
                         ),
                       ),
                     ],
                   )
-                // 💻 WEB / TABLET
+                /// WEB / TABLET
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 📌 CARD TURNO
+                      /// TURNOS
                       Column(
                         children: [
-                          SizedBox(
-                            width: 600,
-                            height: 150,
-                            child: TurnoCard(
-                              id: ultimoTurno!.id,
-                              idTrabajador: ultimoTurno!.idTrabajador,
-                              nombre:
-                                  ultimoTurno!.nombreTrabajador ??
-                                  'Nombre no disponible',
-                              fecha: ultimoTurno!.fecha ?? 'Sin fecha',
-                              total: ultimoTurno!.total,
-                              fondo: ultimoTurno!.fondo,
-                              corte: ultimoTurno!.corte,
-                              fotoUrl: 'https://picsum.photos/200',
-                            ),
-                          ),
+                          ...turnos.map((turno) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: SizedBox(
+                                width: 600,
+                                child: TurnoCard(
+                                  id: turno.id,
+                                  idTrabajador: turno.idTrabajador,
+                                  nombre:
+                                      turno.nombreTrabajador ?? "Sin nombre",
+                                  fecha: turno.fecha?.toString() ?? "Sin fecha",
+                                  total: turno.total,
+                                  fondo: turno.fondo,
+                                  corte: turno.corte,
+                                  fotoUrl: 'https://picsum.photos/200',
+                                ),
+                              ),
+                            );
+                          }),
 
-                          const SizedBox(height: 30),
-                          Text( "Ultimos dos turnos" ),
-                          SizedBox(
-                            width: 600,
-                            height: 150,
-                            child: TurnoCard(
-                              id: ultimoTurno!.id,
-                              idTrabajador: ultimoTurno!.idTrabajador,
-                              nombre:
-                                  ultimoTurno!.nombreTrabajador ??
-                                  'Nombre no disponible',
-                            fecha: ultimoTurno!.fecha ?? 'Sin fecha',
-                              total: ultimoTurno!.total,
-                              fondo: ultimoTurno!.fondo,
-                              corte: ultimoTurno!.corte,
-                              fotoUrl: 'https://picsum.photos/200',
+                          const SizedBox(height: 10),
+
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colores.secondary,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                                vertical: 14,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
                             ),
-                          ),
-                          
-                          SizedBox(
-                            width: 600,
-                            height: 150,
-                            child: TurnoCard(
-                              id: ultimoTurno!.id,
-                              idTrabajador: ultimoTurno!.idTrabajador,
-                              nombre:
-                                  ultimoTurno!.nombreTrabajador ??
-                                  'Nombre no disponible',
-                           fecha: ultimoTurno!.fecha ?? 'Sin fecha',
-                              total: ultimoTurno!.total,
-                              fondo: ultimoTurno!.fondo,
-                              corte: ultimoTurno!.corte,
-                              fotoUrl: 'https://picsum.photos/200',
-                            ),
+
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/VerTurnos");
+                            },
+                            icon: const Icon(Icons.list),
+                            label: const Text("Ver todos los turnos"),
                           ),
                         ],
                       ),
 
-                      const SizedBox(width: 50),
+                      const SizedBox(width: 40),
 
-                      // 📌 CARD DINERO
+                      /// DINERO
                       SizedBox(
                         width: 300,
                         height: 300,
                         child: Dinero(
-                          cantidad: ultimoTurno!.total,
+                          cantidad: turnos.fold(
+                            0,
+                            (sum, turno) => sum + turno.total,
+                          ),
                           onTap: () {},
                         ),
                       ),
@@ -171,15 +177,15 @@ class _InicioState extends State<Inicio> {
     );
   }
 
-  Future<void> cargarTurno() async {
+  Future<void> cargarTurnos() async {
     try {
-      final servicio = Turnosprovider();
-      final lista = await servicio.ultimoTurno();
+      final servicio = TurnosProvider();
+      final lista = await servicio.Ultimos3Turnos();
 
       if (!mounted) return;
 
       setState(() {
-        ultimoTurno = lista;
+        turnos = lista;
         isLoading = false;
       });
     } catch (e) {
