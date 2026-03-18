@@ -180,7 +180,7 @@ class _InicioState extends State<Inicio> {
   Future<void> cargarTurnos() async {
     try {
       final servicio = TurnosProvider();
-      final lista = await servicio.Ultimos3Turnos();
+      final lista = await servicio.obtenerUltimos3Turnos();
 
       if (!mounted) return;
 

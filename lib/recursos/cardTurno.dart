@@ -25,7 +25,6 @@ class TurnoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // 🎨 Color dependiendo del fondo
     Color fondoColor = fondo >= 0 ? Colors.green : Colors.red;
 
     return Card(

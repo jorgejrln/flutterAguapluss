@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_aguapluss/TrabajadoresScreem/TurnosTrabajador.dart';
 import 'package:proyecto_aguapluss/providers/UsuariosProvider.dart';
-
+import 'package:proyecto_aguapluss/providers/turnos_provider.dart';
 import 'package:proyecto_aguapluss/recursos/colores.dart';
 import 'package:proyecto_aguapluss/widgets/sideMenu.dart';
 
@@ -13,12 +14,26 @@ class HomeU extends StatefulWidget {
 }
 
 class _HomeUState extends State<HomeU> {
-
-
-
   
+@override
+void initState() {
+  super.initState();
+
+  Future.microtask(() {
+    context.read<TurnosProvider>().obtenerTurnoActivo();
+  });
+}
+
   @override
   Widget build(BuildContext context) {
+  print(context.watch<TurnosProvider>().hayTurnoActivo);
+  final provider = context.watch<TurnosProvider>();
+
+  if (provider.cargando) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
 
 
 
@@ -28,25 +43,19 @@ class _HomeUState extends State<HomeU> {
 
     return Scaffold(
       backgroundColor: Colores.primary,
-
       appBar: AppBar(
         backgroundColor: Colores.secondary,
         foregroundColor: Colors.white,
         centerTitle: true,
         title: Text(
           'SISTEMA DE CONTROL "AGUA PLUS"',
-          style: TextStyle(
-            fontSize: esCelular ? 18 : 20,
-          ),
+          style: TextStyle(fontSize: esCelular ? 18 : 20),
         ),
       ),
-
       endDrawer: const Sidemenu(),
-
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
-
           child: esCelular
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -73,10 +82,12 @@ class _HomeUState extends State<HomeU> {
     );
   }
 
-  // BOTON INICIAR TURNO
+
   Widget botonIniciarTurno() {
+    final hayTurnoActivo = context.watch<TurnosProvider>().hayTurnoActivo;
+     
     return ElevatedButton(
-      onPressed: () {
+      onPressed: hayTurnoActivo ? null : () {
         Navigator.pushNamed(context, "/TurnoScreen");
       },
       style: ElevatedButton.styleFrom(
@@ -85,37 +96,56 @@ class _HomeUState extends State<HomeU> {
         shadowColor: Colors.transparent,
       ),
       child: contenedorBoton(
-        icono: Icons.play_circle_fill,
+        icono: hayTurnoActivo ? Icons.block : Icons.play_circle_fill,
         texto: "INICIAR TURNO",
-        color: Colores.acent,
+        color: hayTurnoActivo ? Colors.grey : Colores.acent,
       ),
     );
   }
 
-  // BOTON TERMINAR TURNO
+ 
   Widget botonTerminarTurno() {
+    final hayTurnoActivo = context.watch<TurnosProvider>().hayTurnoActivo;
+      
     return ElevatedButton(
-      onPressed: () {
- Navigator.pushNamed(context, "/CerrarTurno");
-},
+      onPressed: !hayTurnoActivo ? null : () {
+        Navigator.pushNamed(context, "/CerrarTurno");
+      },
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.zero,
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
       child: contenedorBoton(
-        icono: Icons.stop_circle,
+        icono: !hayTurnoActivo ? Icons.block : Icons.stop_circle,
         texto: "TERMINAR TURNO",
-        color: Colores.secondary,
+        color: !hayTurnoActivo ? Colors.grey : Colores.secondary,
       ),
     );
   }
 
-  // BOTON VER TURNOS
+  
   Widget botonVerTurnos() {
     return InkWell(
-      onTap: () {
-        print("Ver turnos");
+      onTap: ()async {
+        final usuarioProvider = context.read<UsuariosProvider>();
+        final usuario = usuarioProvider.usuarioActual;
+
+        if (usuario == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Usuario no encontrado")),
+          );
+          return;
+        }
+
+        context.read<TurnosProvider>().obtenerTurnosPorTrabajador(usuario.idTrabajador);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TurnosTrabajador(idTrabajador: usuario.idTrabajador),
+          ),
+        );
       },
       child: contenedorBoton(
         icono: Icons.list_alt,
@@ -125,7 +155,7 @@ class _HomeUState extends State<HomeU> {
     );
   }
 
-  // CONTENEDOR GENERAL DE BOTONES
+
   Widget contenedorBoton({
     required IconData icono,
     required String texto,
@@ -142,7 +172,7 @@ class _HomeUState extends State<HomeU> {
             color: Colors.black26,
             blurRadius: 8,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -157,9 +187,9 @@ class _HomeUState extends State<HomeU> {
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
-          )
+          ),
         ],
       ),
     );
   }
-} 
+}

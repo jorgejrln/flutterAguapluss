@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_aguapluss/Models/UsuariosModel.dart';
 import 'package:proyecto_aguapluss/home/screenHome.dart';
+import 'package:proyecto_aguapluss/providers/turnos_provider.dart';
 import 'package:proyecto_aguapluss/recursos/colores.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_aguapluss/servicios/UsuariosService.dart';
@@ -15,6 +16,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  
 
   final TextEditingController _usercontroller = TextEditingController();
   final TextEditingController _passworcontroller = TextEditingController();
@@ -202,10 +205,14 @@ class _LoginState extends State<Login> {
               ),
               onPressed: () async {
 
-                  
+                  final provider = context.read<TurnosProvider>();
+
+                  provider.limpiarTurnos();
+
 
                 login();
                 final usuarioProvider = context.read<UsuariosProvider>();
+                
 
                 try {
                   final user = await usuarioProvider.validarLogin(
@@ -216,6 +223,7 @@ class _LoginState extends State<Login> {
                   if (user != null) {
                 print(user);
                 print(user.rol);
+
 
                     Navigator.pushReplacementNamed(
                       context,

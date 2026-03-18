@@ -108,12 +108,16 @@ class _CerrarTurnoScreenState extends State<CerrarTurnoScreen> {
                         total: int.parse(totalController.text),
                         lecFin: 0,
                         activo: false,
-                        corte: 14
+                        corte: 14,
                       );
 
                       await turnosProvider.cerrarTurno_(turno);
-
-                      Navigator.pushNamed(context, "/trabajadorHome");
+                      await turnosProvider.obtenerTurnoActivo();
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        "/trabajadorHome",
+                        (route) => false,
+                      );
                     },
 
                     child: const Text(

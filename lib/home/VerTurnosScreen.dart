@@ -6,7 +6,7 @@ import 'package:proyecto_aguapluss/recursos/tableTurnos.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:proyecto_aguapluss/providers/turnos_provider.dart';
 
-class VerTurnoScreen extends StatefulWidget {
+  class VerTurnoScreen extends StatefulWidget {
   const VerTurnoScreen({super.key});
 
   @override
@@ -70,6 +70,7 @@ class _VerTurnoScreenState extends State<VerTurnoScreen> {
       child: SizedBox(
         width: 400,
         child: TextField(
+          style: const TextStyle(fontSize: 16),
           controller: _buscarController,
           decoration: InputDecoration(
             fillColor: Colors.white,
@@ -83,7 +84,8 @@ class _VerTurnoScreenState extends State<VerTurnoScreen> {
           onChanged: (value) {
             setState(() {
               filtrarTurnos(value, provider.turnos);
-            });
+            }
+          );
           },
         ),
       ),

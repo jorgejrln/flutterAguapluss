@@ -14,6 +14,7 @@ class Trabajador {
     String apellidoTrabajador;
     String telefonoTrabajador;
     dynamic foto;
+    
 
     Trabajador({
         required this.idTrabajador,

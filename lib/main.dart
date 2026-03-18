@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_aguapluss/TrabajadoresScreem/CerrarTurnoScreen.dart';
 import 'package:proyecto_aguapluss/TrabajadoresScreem/Home.dart';
-import 'package:proyecto_aguapluss/TrabajadoresScreem/TurnoScreen.dart';
+import 'package:proyecto_aguapluss/TrabajadoresScreem/CrearTurnoScreen.dart';
+import 'package:proyecto_aguapluss/TrabajadoresScreem/TurnosTrabajador.dart';
 import 'package:proyecto_aguapluss/home/VerTurnosScreen.dart';
+import 'package:proyecto_aguapluss/providers/trabajadores_providers.dart';
 
 import 'package:proyecto_aguapluss/providers/turnos_provider.dart';
 import 'package:proyecto_aguapluss/providers/UsuariosProvider.dart';
@@ -16,6 +18,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => UsuariosProvider()),
         ChangeNotifierProvider(create: (_) => TurnosProvider()),
+        ChangeNotifierProvider(create: (_) => TrabajadoresProviders()),
       ],
       child: const MyApp(),
     ),
@@ -38,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/TurnoScreen': (context) => CrearTurnoLogin(),
         '/CerrarTurno': (context) => CerrarTurnoScreen(),
         '/VerTurnos': (context) => VerTurnoScreen(),
+       
       },
     );
   }

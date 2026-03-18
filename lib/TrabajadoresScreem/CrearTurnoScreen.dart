@@ -15,7 +15,7 @@ class CrearTurnoLogin extends StatefulWidget {
   State<CrearTurnoLogin> createState() => _CrearTurnoState();
 }
 
-class _CrearTurnoState extends State<CrearTurnoLogin> {
+class _CrearTurnoState extends State<CrearTurnoLogin> { 
 
   final TextEditingController fondoController = TextEditingController();
 
@@ -127,19 +127,18 @@ class _CrearTurnoState extends State<CrearTurnoLogin> {
 
                       CrearTurno turno = CrearTurno(
                         fecha: DateTime.now(),
-                        idTrabajador: (usuario.idUsuario)-1,
+                        idTrabajador: (usuario.idTrabajador),
                         lecIn: 0,
                         fondo: int.parse(fondoController.text),
                         activo: true,
                       );
 
-                      await turnoProvider.insertarTurno(turno);
-
-                      Navigator.pushReplacement(
+                     await  turnoProvider.insertarTurno(turno);
+                      await turnoProvider.obtenerTurnoActivo(); 
+                    Navigator.pushNamedAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomeU(),
-                        ),
+                        "/trabajadorHome",
+                        (route) => false,
                       );
                     },
 
